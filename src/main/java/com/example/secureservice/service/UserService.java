@@ -2,16 +2,17 @@ package com.example.secureservice.service;
 
 import java.util.List;
 
-import com.example.secureservice.entity.User;
+import com.example.secureservice.dto.UserRequest;
+import com.example.secureservice.dto.UserResponse;
 
 public interface UserService {
-	User createUser(User user);
+	UserResponse createUser(UserRequest user);
 
-	List<User> getAllUsers();
+	List<UserResponse> getAllUsers();
 
-	User getUserById(Long id);
+	UserResponse getUserById(Long id);
 
-	User updateUser(Long id, User user);
+	UserResponse updateUser(Long id, UserRequest user);
 
 	void deleteUser(Long id);
 }

@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.secureservice.entity.User;
+import com.example.secureservice.dto.UserRequest;
+import com.example.secureservice.dto.UserResponse;
 import com.example.secureservice.service.UserService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/users")
@@ -28,24 +31,23 @@ public class UserController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public User createUser(@RequestBody User user) {
-		return userService.createUser(user);
+	public UserResponse createUser(@Valid @RequestBody UserRequest request) {
+		return userService.createUser(request);
 	}
 
 	@GetMapping
-	public List<User> getAllUsers() {
+	public List<UserResponse> getAllUsers() {
 		return userService.getAllUsers();
 	}
 
 	@GetMapping("/{id}")
-	public User getUser(@PathVariable Long id) {
+	public UserResponse getUser(@PathVariable Long id) {
 		return userService.getUserById(id);
 	}
 
 	@PutMapping("/{id}")
-	public User updateUser(@PathVariable Long id, @RequestBody User user) {
-
-		return userService.updateUser(id, user);
+	public UserResponse updateUser(@PathVariable Long id, @Valid @RequestBody UserRequest request) {
+		return userService.updateUser(id, request);
 	}
 
 	@DeleteMapping("/{id}")

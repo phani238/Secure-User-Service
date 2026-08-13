@@ -4,7 +4,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.secureservice.dto.UserRequest;
+import com.example.secureservice.dto.UserResponse;
 import com.example.secureservice.entity.User;
+import com.example.secureservice.exception.UserNotFoundException;
 import com.example.secureservice.repository.UserRepository;
 
 @Service
@@ -17,33 +20,45 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User createUser(User user) {
-		return userRepository.save(user);
+	public UserResponse createUser(UserRequest request) {
+		User user = new User();
+		user.setName(request.getName());
+		user.setEmail(request.getEmail());
+		User savedUser = userRepository.save(user);
+		return toResponse(savedUser);
 	}
 
 	@Override
-	public List<User> getAllUsers() {
-		return userRepository.findAll();
+	public List<UserResponse> getAllUsers() {
+		return userRepository.findAll().stream().map(this::toResponse).toList();
 	}
 
 	@Override
-	public User getUserById(Long id) {
-		return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+	public UserResponse getUserById(Long id) {
+		User user = userRepository.findById(id)
+				.orElseThrow(() -> new UserNotFoundException("User not found with id:" + id));
+		return toResponse(user);
 	}
 
 	@Override
-	public User updateUser(Long id, User user) {
+	public UserResponse updateUser(Long id, UserRequest request) {
 
-		User existingUser = getUserById(id);
-
-		existingUser.setName(user.getName());
-		existingUser.setEmail(user.getEmail());
-
-		return userRepository.save(existingUser);
+		User user = userRepository.findById(id)
+				.orElseThrow(() -> new UserNotFoundException("User not found with id:" + id));
+		user.setName(request.getName());
+		user.setEmail(request.getEmail());
+		User updatedUser = userRepository.save(user);
+		return toResponse(updatedUser);
 	}
 
 	@Override
 	public void deleteUser(Long id) {
-		userRepository.deleteById(id);
+		User user = userRepository.findById(id)
+				.orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+		userRepository.delete(user);
+	}
+
+	private UserResponse toResponse(User user) {
+		return new UserResponse(user.getId(), user.getName(), user.getEmail());
 	}
 }
