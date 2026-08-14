@@ -8,7 +8,7 @@ A hands-on Spring Boot project to learn and implement enterprise Java technologi
 |---|---|---|
 | Stage 1 | REST CRUD + H2 | ✅ Complete |
 | Stage 2 | DTO + Validation + Exception Handling | ✅ Complete |
-| Stage 3 | OAuth2 + JWT | ⏳ Upcoming |
+| Stage 3 | OAuth2 + JWT | ✅ Complete |
 | Stage 4 | Global Logging + Correlation ID | ⏳ Upcoming |
 | Stage 5 | Actuator + Metrics | ⏳ Upcoming |
 | Stage 6 | Docker | ⏳ Upcoming |
@@ -66,3 +66,54 @@ A hands-on Spring Boot project to learn and implement enterprise Java technologi
   "status": 400,
   "message": "email: Email must be valid"
 }
+
+## Stage 3 — OAuth2 + JWT + Keycloak
+
+### Status
+
+✅ Complete
+
+### Architecture
+
+Keycloak
+    ↓
+JWT Access Token
+    ↓
+Spring Boot Resource Server
+    ↓
+Spring Security
+    ↓
+REST APIs
+
+### Implemented
+
+- Keycloak local setup
+- `secure-user-realm`
+- OIDC client
+- USER and ADMIN realm roles
+- JWT access token authentication
+- Spring Boot OAuth2 Resource Server
+- Keycloak JWT role conversion
+- `ROLE_USER` / `ROLE_ADMIN`
+- Role-based CRUD authorization
+- 401 Unauthorized handling
+- 403 Forbidden handling
+- Postman security testing
+- Stage 1–3 runbooks
+
+### Concepts learned
+
+- OAuth2
+- Authorization Server
+- Resource Server
+- OpenID Connect
+- Client
+- Client ID
+- Client Secret
+- Access Token
+- JWT
+- Authentication
+- Authorization
+- Roles
+- Scopes
+- 401 vs 403
