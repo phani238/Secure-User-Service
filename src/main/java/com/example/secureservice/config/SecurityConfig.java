@@ -6,6 +6,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.example.secureservice.filter.RequestLoggingFilter;
+import com.example.secureservice.filter.CorrelationIdFilter;
 
 @Configuration
 public class SecurityConfig {
@@ -20,18 +24,16 @@ public class SecurityConfig {
 						.requestMatchers(HttpMethod.DELETE, "/api/users/**").hasRole("ADMIN").anyRequest()
 						.authenticated())
 				.oauth2ResourceServer(
-						oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
-
+						oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
+				.addFilterBefore(new CorrelationIdFilter(), UsernamePasswordAuthenticationFilter.class)
+				.addFilterAfter( new RequestLoggingFilter(), CorrelationIdFilter.class);
 		return http.build();
 	}
 
 	@Bean
 	JwtAuthenticationConverter jwtAuthenticationConverter() {
-
 		JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-
 		converter.setJwtGrantedAuthoritiesConverter(new KeycloakRoleConverter());
-
 		return converter;
 	}
 }

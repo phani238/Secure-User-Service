@@ -10,6 +10,9 @@ import com.example.secureservice.entity.User;
 import com.example.secureservice.exception.UserNotFoundException;
 import com.example.secureservice.repository.UserRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -21,6 +24,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserResponse createUser(UserRequest request) {
+		log.info("Creating new user with email: {}", request.getEmail());
+		log.debug("User request received for email: {}", request.getEmail());
 		User user = new User();
 		user.setName(request.getName());
 		user.setEmail(request.getEmail());
@@ -35,8 +40,10 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserResponse getUserById(Long id) {
-		User user = userRepository.findById(id)
-				.orElseThrow(() -> new UserNotFoundException("User not found with id:" + id));
+		User user = userRepository.findById(id).orElseThrow(() -> {
+			log.warn("User not found with id: {}", id);
+			return new UserNotFoundException("User not found with id:" + id);
+		});
 		return toResponse(user);
 	}
 
