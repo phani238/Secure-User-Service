@@ -9,7 +9,7 @@ A hands-on Spring Boot project to learn and implement enterprise Java technologi
 | Stage 1 | REST CRUD + H2 | ✅ Complete |
 | Stage 2 | DTO + Validation + Exception Handling | ✅ Complete |
 | Stage 3 | OAuth2 + JWT | ✅ Complete |
-| Stage 4 | Global Logging + Correlation ID | ⏳ Upcoming |
+| Stage 4 | Global Logging + Correlation ID | ✅ Complete |
 | Stage 5 | Actuator + Metrics | ⏳ Upcoming |
 | Stage 6 | Docker | ⏳ Upcoming |
 | Stage 7 | Kafka | ⏳ Upcoming |
@@ -117,3 +117,24 @@ REST APIs
 - Roles
 - Scopes
 - 401 vs 403
+
+## Stage 4 — Logging & Request Correlation
+
+- Added Lombok and `@Slf4j` for application logging
+- Configured Logback logging
+- Added DEBUG, INFO, WARN and ERROR logging
+- Added centralized HTTP request/response logging
+- Added correlation ID support using MDC
+- Supports incoming `X-Correlation-ID`
+- Returns `X-Correlation-ID` in API responses
+- Added error-aware HTTP logging
+- Verified 2xx, 4xx and authentication failure scenarios
+
+### Concepts learned
+
+- MDC
+- Correlation ID
+- Logback
+- Request/Response Logging
+- Logging Levels
+- Centralized HTTP Logging
