@@ -10,6 +10,7 @@ import com.example.secureservice.entity.User;
 import com.example.secureservice.exception.UserNotFoundException;
 import com.example.secureservice.repository.UserRepository;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -17,9 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
+	private final MeterRegistry meterRegistry;
 
-	public UserServiceImpl(UserRepository userRepository) {
+	public UserServiceImpl(UserRepository userRepository, MeterRegistry meterRegistry) {
 		this.userRepository = userRepository;
+		this.meterRegistry = meterRegistry;
 	}
 
 	@Override
@@ -30,6 +33,7 @@ public class UserServiceImpl implements UserService {
 		user.setName(request.getName());
 		user.setEmail(request.getEmail());
 		User savedUser = userRepository.save(user);
+		meterRegistry.counter("users.created").increment();
 		return toResponse(savedUser);
 	}
 
