@@ -1,291 +1,333 @@
 # Secure User Service
 
-A hands-on Spring Boot project to learn and implement enterprise Java
-technologies step by step.
+A production-style **Spring Boot** backend project built step by step to learn enterprise Java development using real-world architecture, security, logging, monitoring, and asynchronous processing.
+
+> **Current Milestone:** Stage 5 Complete • Cross-platform verified on **Windows** and **macOS (Intel)**.
+
+---
+
+## Tech Stack
+
+| Category          | Technology                             |
+| ----------------- | -------------------------------------- |
+| Language          | Java 21                                |
+| Framework         | Spring Boot 4                          |
+| Security          | Spring Security OAuth2 Resource Server |
+| Identity Provider | Keycloak                               |
+| Build Tool        | Maven                                  |
+| Database          | H2                                     |
+| Documentation     | Swagger / OpenAPI                      |
+| Monitoring        | Spring Boot Actuator + Prometheus      |
+| Logging           | Logback + MDC Correlation ID           |
+| Container         | Docker Desktop                         |
+| Messaging         | Kafka *(Stage 6)*                      |
+| Real-time         | WebSocket *(Stage 6)*                  |
+
+---
 
 ## Learning Roadmap
 
-  ------------------------------------------------------------------------
-  Stage                   Feature                  Status
-  ----------------------- ------------------------ -----------------------
-  Stage 1                 REST CRUD + H2           ✅ Complete
+| Stage    | Feature                               | Status     |
+| -------- | ------------------------------------- | ---------- |
+| Stage 1  | REST CRUD + H2                        | ✅ Complete |
+| Stage 2  | DTO + Validation + Exception Handling | ✅ Complete |
+| Stage 3  | OAuth2 + JWT + Keycloak               | ✅ Complete |
+| Stage 4  | Logging + Correlation ID              | ✅ Complete |
+| Stage 5  | Actuator + Metrics                    | ✅ Complete |
+| Stage 6  | Kafka + WebSocket Notifications       | 🚧 Next    |
+| Stage 7  | Docker                                | ⏳ Planned  |
+| Stage 8  | Apache Camel                          | ⏳ Planned  |
+| Stage 9  | CXF + SOAP                            | ⏳ Planned  |
+| Stage 10 | AWS                                   | ⏳ Planned  |
+| Stage 11 | Kubernetes                            | ⏳ Planned  |
+| Stage 12 | CI/CD                                 | ⏳ Planned  |
 
-  Stage 2                 DTO + Validation +       ✅ Complete
-                          Exception Handling       
+---
 
-  Stage 3                 OAuth2 + JWT + Keycloak  ✅ Complete
+# Project Architecture
 
-  Stage 4                 Global Logging +         ✅ Complete
-                          Correlation ID           
+## Current Architecture (Stage 5)
 
-  Stage 5                 Actuator + Metrics       ✅ Complete
+```text
+                Keycloak
+                   │
+             JWT Access Token
+                   │
+                   ▼
+        Spring Boot Resource Server
+                   │
+        Spring Security Filters
+                   │
+        User REST APIs
+                   │
+      H2 Database + Logging + Actuator
+```
 
-  Stage 6                 Asynchronous             ⏳ Upcoming
-                          Transaction + Kafka +    
-                          Notification/WebSocket   
+## Upcoming Architecture (Stage 6)
 
-  Stage 7                 Docker                   ⏳ Upcoming
+```text
+Frontend
+    │
+    ▼
+REST API
+    │
+202 Accepted + Transaction ID
+    │
+    ▼
+Kafka
+    │
+    ▼
+Background Processor
+    │
+    ▼
+Database Status Update
+    │
+    ▼
+WebSocket Notification
+    │
+    ▼
+Frontend receives live updates
+```
 
-  Stage 8                 Apache Camel             ⏳ Upcoming
+---
 
-  Stage 9                 CXF + SOAP               ⏳ Upcoming
+# Stage 1 – REST CRUD + H2
 
-  Stage 10                AWS                      ⏳ Upcoming
+## Implemented
 
-  Stage 11                Kubernetes               ⏳ Upcoming
-
-  Stage 12                CI/CD                    ⏳ Upcoming
-  ------------------------------------------------------------------------
-
-## Stage 1 --- REST CRUD + H2
-
-### Implemented
-
--   Spring Boot REST API
--   User CRUD operations
--   Spring Data JPA
--   Hibernate
--   H2 in-memory database
--   Spring Security baseline
--   Postman API testing
+* Spring Boot REST API
+* User CRUD operations
+* Spring Data JPA
+* Hibernate
+* H2 in-memory database
+* Spring Security baseline
+* Postman testing
 
 ### Endpoints
 
-  Method   Endpoint            Description
-  -------- ------------------- ----------------
-  POST     `/api/users`        Create user
-  GET      `/api/users`        Get all users
-  GET      `/api/users/{id}`   Get user by ID
-  PUT      `/api/users/{id}`   Update user
-  DELETE   `/api/users/{id}`   Delete user
+| Method | Endpoint          | Description    |
+| ------ | ----------------- | -------------- |
+| POST   | `/api/users`      | Create user    |
+| GET    | `/api/users`      | Get all users  |
+| GET    | `/api/users/{id}` | Get user by ID |
+| PUT    | `/api/users/{id}` | Update user    |
+| DELETE | `/api/users/{id}` | Delete user    |
 
-## Stage 2 --- DTO + Validation + Exception Handling
+---
 
-### Implemented
+# Stage 2 – DTO + Validation
 
--   Request DTO (`UserRequest`)
--   Response DTO (`UserResponse`)
--   Bean validation using `@Valid`
--   `@NotBlank` validation
--   `@Email` validation
--   Custom `UserNotFoundException`
--   Global exception handling using `@RestControllerAdvice`
--   Centralized validation error handling
--   Proper `400 Bad Request` responses
--   Proper `404 Not Found` responses
--   Handling non-existing users during GET, PUT and DELETE
+## Implemented
 
-### Example Error Responses
+* Request & Response DTOs
+* Bean Validation (`@Valid`)
+* `@NotBlank`
+* `@Email`
+* Custom `UserNotFoundException`
+* Global exception handling
+* Standardized `400` and `404` responses
 
-#### Validation Error
+### Example Validation Error
 
-``` json
+```json
 {
   "status": 400,
   "message": "email: Email must be valid"
 }
 ```
 
-## Stage 3 --- OAuth2 + JWT + Keycloak
+---
 
-### Status
+# Stage 3 – OAuth2 + JWT + Keycloak
 
-✅ Complete
+## Implemented
 
-### Architecture
+* Local Keycloak setup
+* `secure-user-realm`
+* OIDC client configuration
+* USER and ADMIN roles
+* JWT authentication
+* Spring Boot Resource Server
+* Role-based authorization
+* 401 vs 403 handling
+* Swagger & Postman security testing
 
-``` text
-Keycloak
-    ↓
-JWT Access Token
-    ↓
-Spring Boot Resource Server
-    ↓
+### Security Flow
+
+```text
+User
+ │
+ ▼
+Keycloak Login
+ │
+ ▼
+JWT Token
+ │
+ ▼
 Spring Security
-    ↓
-REST APIs
+ │
+ ▼
+Protected APIs
 ```
 
-### Implemented
+### Concepts Learned
 
--   Keycloak local setup
--   `secure-user-realm`
--   OIDC client
--   USER and ADMIN realm roles
--   JWT access token authentication
--   Spring Boot OAuth2 Resource Server
--   Keycloak JWT role conversion
--   `ROLE_USER` / `ROLE_ADMIN`
--   Role-based CRUD authorization
--   401 Unauthorized handling
--   403 Forbidden handling
--   Postman security testing
--   Stage 1--3 runbooks
+* OAuth2
+* OpenID Connect
+* Resource Server
+* Client ID & Client Secret
+* JWT
+* Authentication vs Authorization
+* Roles & Scopes
 
-### Concepts learned
+---
 
--   OAuth2
--   Authorization Server
--   Resource Server
--   OpenID Connect
--   Client
--   Client ID
--   Client Secret
--   Access Token
--   JWT
--   Authentication
--   Authorization
--   Roles
--   Scopes
--   401 vs 403
+# Stage 4 – Logging & Correlation ID
 
-## Stage 4 --- Logging & Request Correlation
+## Implemented
 
-### Implemented
+* Lombok `@Slf4j`
+* Logback configuration
+* Centralized request logging
+* MDC Correlation ID
+* `X-Correlation-ID` support
+* Error-aware logging
+* Request/response tracing
 
--   Added Lombok and `@Slf4j` for application logging
--   Configured Logback logging
--   Added DEBUG, INFO, WARN and ERROR logging
--   Added centralized HTTP request/response logging
--   Added correlation ID support using MDC
--   Supports incoming `X-Correlation-ID`
--   Returns `X-Correlation-ID` in API responses
--   Added error-aware HTTP logging
--   Verified 2xx, 4xx and authentication failure scenarios
+### Concepts Learned
 
-### Concepts learned
+* MDC
+* Correlation IDs
+* Logging Levels
+* Centralized HTTP logging
 
--   MDC
--   Correlation ID
--   Logback
--   Request/Response Logging
--   Logging Levels
--   Centralized HTTP Logging
+---
 
-## Stage 5 --- Actuator + Metrics
+# Stage 5 – Actuator & Monitoring
 
-### Status
+## Implemented
 
-✅ Complete
+* Spring Boot Actuator
+* Health endpoint
+* Metrics endpoint
+* Prometheus endpoint
+* Public health endpoint
+* ADMIN-only management endpoints
+* Browser & API verification
 
-### Implemented
+### Concepts Learned
 
--   Spring Boot Actuator
--   Health endpoint
--   Metrics endpoint
--   Prometheus metrics endpoint
--   Actuator security rules
--   Public `/actuator/health/**`
--   ADMIN-only `/actuator/**`
--   Verified Actuator endpoints through browser/API testing
--   Added Actuator security tests
+* Health checks
+* Application metrics
+* Prometheus integration
+* Protected management endpoints
 
-### Concepts learned
+---
 
--   Spring Boot Actuator
--   Health checks
--   Application metrics
--   Prometheus
--   Monitoring endpoints
--   Public vs protected management endpoints
+# Testing
 
-## Testing --- JUnit 5 + Mockito + MockMvc
+## Completed
 
-### Status
+* JUnit 5
+* Mockito
+* MockMvc
+* `@WebMvcTest`
+* `@SpringBootTest`
+* Security testing
+* CSRF testing
+* Actuator testing
 
-✅ Complete
+### Current Test Checkpoint
 
-### Implemented
+| Area               | Result    |
+| ------------------ | --------- |
+| Service Tests      | 8/8       |
+| Controller Tests   | 11/11     |
+| API Security Tests | 8/8       |
+| Actuator Tests     | 3/3       |
+| **Total**          | **30/30** |
 
--   Service unit tests using JUnit 5 and Mockito
--   Controller tests using `@WebMvcTest`
--   `MockMvc` request/response testing
--   DTO validation tests
--   Global exception handling tests
--   Mockito `verify()` and `never()` verification
--   Spring Security authorization tests
--   USER vs ADMIN role testing
--   Authentication (`401`) and authorization (`403`) testing
--   CSRF testing for state-changing requests
--   Full application-context tests using `@SpringBootTest`
--   Actuator security tests
+---
 
-### Current Test Coverage Checkpoint
+# Cross-Platform Verification
 
-``` text
-Service Tests              8/8   ✅
-Controller Tests          11/11  ✅
-API Security Tests          8/8   ✅
-Actuator Security Tests     3/3   ✅
-------------------------------------
-Total                      30/30  ✅
+This project has been successfully verified on both environments.
+
+| Environment   | Status     |
+| ------------- | ---------- |
+| Windows       | ✅ Verified |
+| macOS (Intel) | ✅ Verified |
+
+### macOS Fixes Verified
+
+* Java 21 configuration
+* Maven configuration
+* Lombok integration with STS
+* Docker Desktop
+* Keycloak 26.7.2
+* Swagger
+* JWT authentication
+* Postman testing
+
+---
+
+# Documentation
+
+| Guide                             | Purpose                 |
+| --------------------------------- | ----------------------- |
+| `docs/setup/MACOS.md`             | macOS setup             |
+| `docs/setup/WINDOWS.md`           | Windows setup           |
+| `docs/keycloak/KEYCLOAK-REALM.md` | Realm export/import     |
+| `docs/stages/STAGE-05.md`         | Stage 5 summary         |
+| `docs/runbook/`                   | Detailed stage runbooks |
+
+---
+
+# Quick Start
+
+## Prerequisites
+
+* Java 21
+* Maven 3.9+
+* Docker Desktop
+* Keycloak 26.7.2
+
+## Verify Installation
+
+```bash
+java --version
+javac --version
+mvn --version
+docker --version
 ```
 
-### Testing Concepts Learned
+## Run
 
--   Unit testing vs MVC testing
--   JUnit 5
--   Mockito
--   MockMvc
--   `@WebMvcTest`
--   `@SpringBootTest`
--   `@MockitoBean`
--   `@Import(SecurityConfig.class)`
--   Mocking service/repository dependencies
--   Authentication vs authorization testing
--   Security role simulation
--   CSRF handling in tests
--   Testing public and protected Actuator endpoints
--   Avoiding false-positive tests by verifying the actual endpoint/test
-    context
-
-## Stage 6 --- Asynchronous Transaction + Kafka + Notification/WebSocket
-
-### Status
-
-⏳ Upcoming
-
-### Planned
-
--   Asynchronous transaction processing
--   Return `202 Accepted` with a transaction/job ID
--   Transaction status tracking (`IN_PROGRESS`, `COMPLETED`, `FAILED`)
--   Message queue / Kafka integration
--   Background transaction processing
--   Notification mechanism
--   WebSocket real-time status updates
--   Handling user logout/disconnection while processing continues
--   Tests for asynchronous processing and notifications
-
-### Target Architecture
-
-``` text
-Frontend
-    ↓
-REST API
-    ↓
-202 Accepted + transactionId
-    ↓
-Message Queue / Kafka
-    ↓
-Transaction Processor
-    ↓
-Transaction Status → Database
-    ↓
-Notification
-    ↓
-WebSocket
-    ↓
-Frontend receives real-time status
+```bash
+mvn clean spring-boot:run
 ```
 
-## Future Roadmap
+## Open
 
-After the asynchronous transaction milestone:
+| Service     | URL                                         |
+| ----------- | ------------------------------------------- |
+| Application | http://localhost:8081                       |
+| Swagger     | http://localhost:8081/swagger-ui/index.html |
+| Keycloak    | http://localhost:8080                       |
 
--   Docker
--   Apache Camel
--   CXF + SOAP
--   AWS
--   Kubernetes
--   CI/CD
+---
+
+# What's Next
+
+The next milestone introduces asynchronous processing using Kafka and WebSockets.
+
+### Stage 6 Goals
+
+* Asynchronous transactions
+* `202 Accepted` workflow
+* Kafka producer
+* Kafka consumer
+* Transaction status tracking
+* WebSocket live notifications
+
+This transforms the project from a traditional CRUD application into an event-driven backend architecture suitable for real-world enterprise systems.
