@@ -34,7 +34,7 @@ A production-style **Spring Boot** backend project built step by step to learn e
 | Stage 3  | OAuth2 + JWT + Keycloak               | ✅ Complete |
 | Stage 4  | Logging + Correlation ID              | ✅ Complete |
 | Stage 5  | Actuator + Metrics                    | ✅ Complete |
-| Stage 6  | Kafka + WebSocket Notifications       | 🚧 Next    |
+| Stage 6  | Kafka + WebSocket Notifications       | 🔄 In Progress |
 | Stage 7  | Docker                                | ⏳ Planned  |
 | Stage 8  | Apache Camel                          | ⏳ Planned  |
 | Stage 9  | CXF + SOAP                            | ⏳ Planned  |
